@@ -2,11 +2,13 @@ package com.bridgelabz.hotelreservation;
 
 public class Hotel {
 
-    String name;
-    int rateForRegular;
+    public String name;
+    public int weekdayRate;
+    public int weekendRate;
 
-    public Hotel(String name, int rateForRegular) {
+    public Hotel(String name, int weekdayRate, int weekendRate) {
         this.name = name;
-        this.rateForRegular = rateForRegular;
+        this.weekdayRate = weekdayRate;
+        this.weekendRate = weekendRate;
     }
 }
