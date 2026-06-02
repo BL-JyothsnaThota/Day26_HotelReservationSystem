@@ -23,12 +23,12 @@ public class HotelReservation {
         reservation.addHotel("Bridgewood", 150, 50, 4);
         reservation.addHotel("Ridgewood", 220, 150, 5);
     }
-    public String findCheapestHotel(String[] dates) {
+    public String findCheapestBestRatedHotel(String[] dates) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMMyyyy");
 
         int minCost = Integer.MAX_VALUE;
-        List<String> cheapestHotels = new ArrayList<>();
+        Hotel bestHotel = null;
 
         for (Hotel hotel : hotelList) {
 
@@ -46,15 +46,19 @@ public class HotelReservation {
                 }
             }
 
+            // 🔥 CORE LOGIC
             if (totalCost < minCost) {
                 minCost = totalCost;
-                cheapestHotels.clear();
-                cheapestHotels.add(hotel.name);
-            } else if (totalCost == minCost) {
-                cheapestHotels.add(hotel.name);
+                bestHotel = hotel;
+            }
+            else if (totalCost == minCost) {
+                if (hotel.rating > bestHotel.rating) {
+                    bestHotel = hotel;
+                }
             }
         }
 
-        return String.join(" and ", cheapestHotels) + " with Total Rates $" + minCost;
+        return bestHotel.name + ", Rating: " + bestHotel.rating +
+                " and Total Rates: $" + minCost;
     }
 }
