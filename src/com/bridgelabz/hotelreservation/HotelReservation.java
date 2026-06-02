@@ -12,22 +12,16 @@ public class HotelReservation {
 
     public ArrayList<Hotel> hotelList = new ArrayList<>();
 
-    public void addHotel(String name, int weekdayRate, int weekendRate) {
-        hotelList.add(new Hotel(name, weekdayRate, weekendRate));
+    public void addHotel(String name, int weekdayRate, int weekendRate, int rating) {
+        hotelList.add(new Hotel(name, weekdayRate, weekendRate, rating));
     }
     public static void main(String[] args) {
 
         HotelReservation reservation = new HotelReservation();
 
-        reservation.addHotel("Lakewood", 110, 90);
-        reservation.addHotel("Bridgewood", 150, 50);
-        reservation.addHotel("Ridgewood", 220, 150);
-
-        String[] dates = {"11Sep2020", "12Sep2020"};
-
-        String result = reservation.findCheapestHotel(dates);
-
-        System.out.println(result);
+        reservation.addHotel("Lakewood", 110, 90, 3);
+        reservation.addHotel("Bridgewood", 150, 50, 4);
+        reservation.addHotel("Ridgewood", 220, 150, 5);
     }
     public String findCheapestHotel(String[] dates) {
 
