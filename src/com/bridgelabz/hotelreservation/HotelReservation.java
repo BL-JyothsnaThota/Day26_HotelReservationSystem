@@ -61,4 +61,19 @@ public class HotelReservation {
         return bestHotel.name + ", Rating: " + bestHotel.rating +
                 " and Total Rates: $" + minCost;
     }
+    public String findBestRatedHotel() {
+
+        Hotel bestHotel = null;
+        int maxRating = Integer.MIN_VALUE;
+
+        for (Hotel hotel : hotelList) {
+
+            if (hotel.rating > maxRating) {
+                maxRating = hotel.rating;
+                bestHotel = hotel;
+            }
+        }
+
+        return bestHotel.name + " with Rating: " + bestHotel.rating;
+    }
 }

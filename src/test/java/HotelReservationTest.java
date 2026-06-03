@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class HotelReservationTest {
 
     @Test
-    void givenDateRange_ShouldReturnCheapestBestRatedHotel() {
+    void givenHotels_ShouldReturnBestRatedHotel() {
 
         HotelReservation reservation = new HotelReservation();
 
@@ -16,10 +16,8 @@ class HotelReservationTest {
         reservation.addHotel("Bridgewood", 150, 50, 4);
         reservation.addHotel("Ridgewood", 220, 150, 5);
 
-        String[] dates = {"11Sep2020", "12Sep2020"};
+        String result = reservation.findBestRatedHotel();
 
-        String result = reservation.findCheapestBestRatedHotel(dates);
-
-        assertEquals("Bridgewood, Rating: 4 and Total Rates: $200", result);
+        assertEquals("Ridgewood with Rating: 5", result);
     }
 }
