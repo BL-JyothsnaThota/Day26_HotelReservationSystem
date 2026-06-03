@@ -2,15 +2,24 @@ package com.bridgelabz.hotelreservation;
 
 public class Hotel {
 
-    public String name;
-    public int weekdayRate;
-    public int weekendRate;
-    public int rating;   // NEW FIELD
+    String name;
 
-    public Hotel(String name, int weekdayRate, int weekendRate, int rating) {
+    int regularWeekdayRate;
+    int regularWeekendRate;
+
+    int rewardWeekdayRate;
+    int rewardWeekendRate;
+
+    int rating;
+
+    public Hotel(String name, int regularWeekdayRate, int regularWeekendRate,
+                 int rewardWeekdayRate, int rewardWeekendRate, int rating) {
+
         this.name = name;
-        this.weekdayRate = weekdayRate;
-        this.weekendRate = weekendRate;
+        this.regularWeekdayRate = regularWeekdayRate;
+        this.regularWeekendRate = regularWeekendRate;
+        this.rewardWeekdayRate = rewardWeekdayRate;
+        this.rewardWeekendRate = rewardWeekendRate;
         this.rating = rating;
     }
 }

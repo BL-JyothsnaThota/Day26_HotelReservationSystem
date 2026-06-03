@@ -12,18 +12,39 @@ public class HotelReservation {
 
     public ArrayList<Hotel> hotelList = new ArrayList<>();
 
-    public void addHotel(String name, int weekdayRate, int weekendRate, int rating) {
-        hotelList.add(new Hotel(name, weekdayRate, weekendRate, rating));
+    public void addHotel(String name,
+                         int regWeekday, int regWeekend,
+                         int rewWeekday, int rewWeekend,
+                         int rating) {
+
+        hotelList.add(new Hotel(name,
+                regWeekday, regWeekend,
+                rewWeekday, rewWeekend,
+                rating));
     }
     public static void main(String[] args) {
 
         HotelReservation reservation = new HotelReservation();
 
-        reservation.addHotel("Lakewood", 110, 90, 3);
-        reservation.addHotel("Bridgewood", 150, 50, 4);
-        reservation.addHotel("Ridgewood", 220, 150, 5);
+        // ✅ Updated hotel data (Regular + Reward rates + Rating)
+        reservation.addHotel("Lakewood", 110, 90, 80, 80, 3);
+        reservation.addHotel("Bridgewood", 150, 50, 110, 50, 4);
+        reservation.addHotel("Ridgewood", 220, 150, 100, 40, 5);
+
+        // ✅ Input dates
+        String[] dates = {"11Sep2020", "12Sep2020"};
+
+        // ✅ Choose customer type
+        CustomerType type = CustomerType.REGULAR;
+        // CustomerType type = CustomerType.REWARD;
+
+        // ✅ Call FINAL UC8 method
+        String result = reservation.findCheapestBestRatedHotel(dates, type);
+
+        // ✅ Output
+        System.out.println("Best Hotel: " + result);
     }
-    public String findCheapestBestRatedHotel(String[] dates) {
+    public String findCheapestBestRatedHotel(String[] dates, CustomerType type) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMMyyyy");
 
@@ -39,14 +60,16 @@ public class HotelReservation {
                 LocalDate date = LocalDate.parse(dateStr, formatter);
                 DayOfWeek day = date.getDayOfWeek();
 
-                if (day == DayOfWeek.SATURDAY || day == DayOfWeek.SUNDAY) {
-                    totalCost += hotel.weekendRate;
+                boolean isWeekend = (day == DayOfWeek.SATURDAY || day == DayOfWeek.SUNDAY);
+
+                if (type == CustomerType.REGULAR) {
+                    totalCost += isWeekend ? hotel.regularWeekendRate : hotel.regularWeekdayRate;
                 } else {
-                    totalCost += hotel.weekdayRate;
+                    totalCost += isWeekend ? hotel.rewardWeekendRate : hotel.rewardWeekdayRate;
                 }
             }
 
-            // 🔥 CORE LOGIC
+            // 🔥 FINAL DECISION LOGIC
             if (totalCost < minCost) {
                 minCost = totalCost;
                 bestHotel = hotel;
@@ -59,7 +82,7 @@ public class HotelReservation {
         }
 
         return bestHotel.name + ", Rating: " + bestHotel.rating +
-                " and Total Rates: $" + minCost;
+                ", Total Cost: $" + minCost;
     }
     public String findBestRatedHotel() {
 
