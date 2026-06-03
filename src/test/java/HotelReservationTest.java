@@ -3,6 +3,7 @@ package test.java;
 import com.bridgelabz.hotelreservation.CustomerType;
 import com.bridgelabz.hotelreservation.Hotel;
 import com.bridgelabz.hotelreservation.HotelReservation;
+import com.bridgelabz.hotelreservation.HotelReservationException;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -10,7 +11,7 @@ class HotelReservationTest {
 
 
     @Test
-    void givenRegularCustomer_ShouldReturnBestHotel() {
+    void givenRegularCustomer_ShouldReturnBestHotel() throws HotelReservationException {
 
         HotelReservation reservation = new HotelReservation();
 
@@ -25,7 +26,7 @@ class HotelReservationTest {
         assertEquals("Bridgewood, Rating: 4, Total Cost: $200", result);
     }
     @Test
-    void givenRewardCustomer_ShouldReturnBestHotel() {
+    void givenRewardCustomer_ShouldReturnBestHotel() throws HotelReservationException {
 
         HotelReservation reservation = new HotelReservation();
 
@@ -38,5 +39,38 @@ class HotelReservationTest {
         String result = reservation.findCheapestBestRatedHotel(dates, CustomerType.REWARD);
 
         assertEquals("Ridgewood, Rating: 5, Total Cost: $140", result);
+    }
+    @Test
+    void givenInvalidDate_ShouldThrowException() {
+
+        HotelReservation reservation = new HotelReservation();
+
+        reservation.addHotel("Lakewood", 110, 90, 80, 80, 3);
+
+        String[] dates = {"INVALID"};
+
+        assertThrows(HotelReservationException.class, () -> {
+            reservation.findCheapestBestRatedHotel(dates, CustomerType.REGULAR);
+        });
+    }
+    @Test
+    void givenNullDates_ShouldThrowException() {
+
+        HotelReservation reservation = new HotelReservation();
+
+        assertThrows(HotelReservationException.class, () -> {
+            reservation.findCheapestBestRatedHotel(null, CustomerType.REGULAR);
+        });
+    }
+    @Test
+    void givenEmptyDates_ShouldThrowException() {
+
+        HotelReservation reservation = new HotelReservation();
+
+        String[] dates = {};
+
+        assertThrows(HotelReservationException.class, () -> {
+            reservation.findCheapestBestRatedHotel(dates, CustomerType.REGULAR);
+        });
     }
 }

@@ -26,65 +26,76 @@ public class HotelReservation {
 
         HotelReservation reservation = new HotelReservation();
 
-        // ✅ Updated hotel data (Regular + Reward rates + Rating)
         reservation.addHotel("Lakewood", 110, 90, 80, 80, 3);
         reservation.addHotel("Bridgewood", 150, 50, 110, 50, 4);
         reservation.addHotel("Ridgewood", 220, 150, 100, 40, 5);
 
-        // ✅ Input dates
         String[] dates = {"11Sep2020", "12Sep2020"};
 
-        // ✅ Choose customer type
-        CustomerType type = CustomerType.REGULAR;
-        // CustomerType type = CustomerType.REWARD;
+        try {
+            String result = reservation.findCheapestBestRatedHotel(
+                    dates, CustomerType.REGULAR);
 
-        // ✅ Call FINAL UC8 method
-        String result = reservation.findCheapestBestRatedHotel(dates, type);
+            System.out.println(result);
 
-        // ✅ Output
-        System.out.println("Best Hotel: " + result);
+        } catch (HotelReservationException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
     }
-    public String findCheapestBestRatedHotel(String[] dates, CustomerType type) {
+    public String findCheapestBestRatedHotel(String[] dates, CustomerType type)
+            throws HotelReservationException {
+
+        if (dates == null || dates.length == 0) {
+            throw new HotelReservationException("Date input cannot be null or empty");
+        }
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMMyyyy");
 
         int minCost = Integer.MAX_VALUE;
         Hotel bestHotel = null;
 
-        for (Hotel hotel : hotelList) {
+        try {
 
-            int totalCost = 0;
+            for (Hotel hotel : hotelList) {
 
-            for (String dateStr : dates) {
+                int totalCost = 0;
 
-                LocalDate date = LocalDate.parse(dateStr, formatter);
-                DayOfWeek day = date.getDayOfWeek();
+                for (String dateStr : dates) {
 
-                boolean isWeekend = (day == DayOfWeek.SATURDAY || day == DayOfWeek.SUNDAY);
+                    if (dateStr == null || dateStr.isEmpty()) {
+                        throw new HotelReservationException("Invalid date value");
+                    }
 
-                if (type == CustomerType.REGULAR) {
-                    totalCost += isWeekend ? hotel.regularWeekendRate : hotel.regularWeekdayRate;
-                } else {
-                    totalCost += isWeekend ? hotel.rewardWeekendRate : hotel.rewardWeekdayRate;
+                    LocalDate date = LocalDate.parse(dateStr, formatter);
+                    DayOfWeek day = date.getDayOfWeek();
+
+                    boolean isWeekend = (day == DayOfWeek.SATURDAY || day == DayOfWeek.SUNDAY);
+
+                    if (type == CustomerType.REGULAR) {
+                        totalCost += isWeekend ? hotel.regularWeekendRate : hotel.regularWeekdayRate;
+                    } else {
+                        totalCost += isWeekend ? hotel.rewardWeekendRate : hotel.rewardWeekdayRate;
+                    }
                 }
-            }
 
-            // 🔥 FINAL DECISION LOGIC
-            if (totalCost < minCost) {
-                minCost = totalCost;
-                bestHotel = hotel;
-            }
-            else if (totalCost == minCost) {
-                if (hotel.rating > bestHotel.rating) {
+                // same UC9 logic
+                if (totalCost < minCost) {
+                    minCost = totalCost;
                     bestHotel = hotel;
+                } else if (totalCost == minCost) {
+                    if (hotel.rating > bestHotel.rating) {
+                        bestHotel = hotel;
+                    }
                 }
             }
+
+        } catch (Exception e) {
+            throw new HotelReservationException("Invalid date format");
         }
 
         return bestHotel.name + ", Rating: " + bestHotel.rating +
                 ", Total Cost: $" + minCost;
-    }
-    public String findBestRatedHotel() {
+    }    public String findBestRatedHotel() {
 
         Hotel bestHotel = null;
         int maxRating = Integer.MIN_VALUE;
