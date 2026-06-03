@@ -176,4 +176,47 @@ public class HotelReservation {
                 .orElseThrow(() ->
                         new HotelReservationException("No hotels available"));
     }
+    public String findCheapestBestRatedHotelStreamRegular(String[] dates)
+            throws HotelReservationException {
+
+        if (dates == null || dates.length == 0) {
+            throw new HotelReservationException("Date input cannot be null or empty");
+        }
+
+        return hotelList.stream()
+
+                .map(hotel -> {
+                    try {
+                        int cost = calculateCost(hotel, dates, CustomerType.REGULAR);
+                        return new Object[]{hotel, cost};
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+
+                .sorted((a, b) -> {
+                    int costCompare = Integer.compare((int) a[1], (int) b[1]);
+
+                    if (costCompare == 0) {
+                        return Integer.compare(
+                                ((Hotel) b[0]).rating,
+                                ((Hotel) a[0]).rating);
+                    }
+
+                    return costCompare;
+                })
+
+                .map(result -> {
+                    Hotel h = (Hotel) result[0];
+                    int cost = (int) result[1];
+
+                    return h.name + ", Rating: " + h.rating +
+                            " and Total Rates: $" + cost;
+                })
+
+                .findFirst()
+                .orElseThrow(() ->
+                        new HotelReservationException("No hotels available"));
+    }
+
 }

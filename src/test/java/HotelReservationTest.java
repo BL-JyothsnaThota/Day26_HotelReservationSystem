@@ -89,4 +89,20 @@ class HotelReservationTest {
 
         assertEquals("Ridgewood, Rating: 5 and Total Rates: $140", result);
     }
+    @Test
+    void givenRegularCustomer_WhenUsingStreams_ShouldReturnBestHotel()
+            throws HotelReservationException {
+
+        HotelReservation reservation = new HotelReservation();
+
+        reservation.addHotel("Lakewood", 110, 90, 80, 80, 3);
+        reservation.addHotel("Bridgewood", 150, 50, 110, 50, 4);
+        reservation.addHotel("Ridgewood", 220, 150, 100, 40, 5);
+
+        String[] dates = {"11Sep2020", "12Sep2020"};
+
+        String result = reservation.findCheapestBestRatedHotelStreamRegular(dates);
+
+        assertEquals("Bridgewood, Rating: 4 and Total Rates: $200", result);
+    }
 }
